@@ -147,21 +147,13 @@ var recreateScheduleForAllJobs = function () {
       while (1) {
         switch (_context2.prev = _context2.next) {
           case 0:
-            if (_node2.default.applicationId) {
-              _context2.next = 2;
-              break;
-            }
-
-            throw new Error('Parse is not initialized');
-
-          case 2:
-            _context2.prev = 2;
-            _context2.next = 5;
+            _context2.prev = 0;
+            _context2.next = 3;
             return new _node2.default.Query('_JobSchedule').find({
               useMasterKey: true
             });
 
-          case 5:
+          case 3:
             results = _context2.sent;
 
 
@@ -170,7 +162,7 @@ var recreateScheduleForAllJobs = function () {
             _iteratorNormalCompletion = true;
             _didIteratorError = false;
             _iteratorError = undefined;
-            _context2.prev = 10;
+            _context2.prev = 8;
             for (_iterator = results[Symbol.iterator](); !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
               job = _step.value;
 
@@ -180,55 +172,57 @@ var recreateScheduleForAllJobs = function () {
                 console.log(error);
               }
             }
-            _context2.next = 18;
+            _context2.next = 16;
             break;
 
-          case 14:
-            _context2.prev = 14;
-            _context2.t0 = _context2['catch'](10);
+          case 12:
+            _context2.prev = 12;
+            _context2.t0 = _context2['catch'](8);
             _didIteratorError = true;
             _iteratorError = _context2.t0;
 
-          case 18:
-            _context2.prev = 18;
-            _context2.prev = 19;
+          case 16:
+            _context2.prev = 16;
+            _context2.prev = 17;
 
             if (!_iteratorNormalCompletion && _iterator.return) {
               _iterator.return();
             }
 
-          case 21:
-            _context2.prev = 21;
+          case 19:
+            _context2.prev = 19;
 
             if (!_didIteratorError) {
-              _context2.next = 24;
+              _context2.next = 22;
               break;
             }
 
             throw _iteratorError;
 
+          case 22:
+            return _context2.finish(19);
+
+          case 23:
+            return _context2.finish(16);
+
           case 24:
-            return _context2.finish(21);
-
-          case 25:
-            return _context2.finish(18);
-
-          case 26:
             console.log(Object.keys(cronJobs).length + ' job(s) scheduled.');
-            _context2.next = 32;
+            _context2.next = 31;
             break;
 
-          case 29:
-            _context2.prev = 29;
-            _context2.t1 = _context2['catch'](2);
+          case 27:
+            _context2.prev = 27;
+            _context2.t1 = _context2['catch'](0);
+
+            console.log('SCHEDULER ERROR: Parse is probably not initialized!');
             throw _context2.t1;
 
-          case 32:
+          case 31:
           case 'end':
             return _context2.stop();
         }
       }
-    }, _callee2, undefined, [[2, 29], [10, 14, 18, 26], [19,, 21, 25]]);
+    }, _callee2, undefined, [[0, 27], [8, 12, 16, 24], [17,, 19, 23]]);
   }));
 
   return function recreateScheduleForAllJobs() {
