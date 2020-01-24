@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.destroySchedule = exports.recreateSchedule = undefined;
+exports.destroySchedule = exports.recreateSchedule = exports.init = undefined;
 
 var _cron = require('cron');
 
@@ -487,5 +487,6 @@ var performJob = function () {
   };
 }();
 
+exports.init = init;
 exports.recreateSchedule = recreateSchedule;
 exports.destroySchedule = destroySchedule;
