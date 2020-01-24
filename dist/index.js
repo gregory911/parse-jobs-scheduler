@@ -411,36 +411,52 @@ var daysOfWeekToCronString = function daysOfWeekToCronString(daysOfWeek) {
  */
 var performJob = function () {
   var _ref3 = _asyncToGenerator(regeneratorRuntime.mark(function _callee3(jobName, params) {
-    var request;
+    var jobQuery, latestJob, request;
     return regeneratorRuntime.wrap(function _callee3$(_context3) {
       while (1) {
         switch (_context3.prev = _context3.next) {
           case 0:
-            try {
-              request = (0, _requestPromise2.default)({
-                method: 'POST',
-                uri: _node2.default.serverURL + '/jobs/' + jobName,
-                headers: {
-                  'X-Parse-Application-Id': _node2.default.applicationId,
-                  'X-Parse-Master-Key': _node2.default.masterKey
-                },
-                json: true // Automatically parses the JSON string in the response
-              });
+            _context3.prev = 0;
+            jobQuery = new _node2.default.Query('_JobStatus');
 
-              if (params) {
-                request.body = params;
-              }
-              console.log('Job ' + jobName + ' launched.');
-            } catch (error) {
-              console.log(error);
+            jobQuery.equalTo("jobName", jobName);
+            jobQuery.descending("createdAt");
+            _context3.next = 6;
+            return jobQuery.first({ useMasterKey: true });
+
+          case 6:
+            latestJob = _context3.sent;
+
+            console.log('CHECK FOR LATEST JOB', JSON.parse(JSON.stringify(latestJob)));
+            request = (0, _requestPromise2.default)({
+              method: 'POST',
+              uri: _node2.default.serverURL + '/jobs/' + jobName,
+              headers: {
+                'X-Parse-Application-Id': _node2.default.applicationId,
+                'X-Parse-Master-Key': _node2.default.masterKey
+              },
+              json: true // Automatically parses the JSON string in the response
+            });
+
+            if (params) {
+              request.body = params;
             }
+            console.log('Job ' + jobName + ' launched.');
+            _context3.next = 16;
+            break;
 
-          case 1:
+          case 13:
+            _context3.prev = 13;
+            _context3.t0 = _context3['catch'](0);
+
+            console.log(_context3.t0);
+
+          case 16:
           case 'end':
             return _context3.stop();
         }
       }
-    }, _callee3, undefined);
+    }, _callee3, undefined, [[0, 13]]);
   }));
 
   return function performJob(_x2, _x3) {
