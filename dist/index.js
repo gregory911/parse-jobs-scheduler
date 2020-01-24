@@ -32,12 +32,35 @@ var PARSE_TIMEZONE = 'UTC';
 
 var cronJobs = {};
 
+var parseInitialized = false;
+
+/**
+ * Parse Init object
+ * @typedef {Object} _InitObject
+ * @property {String} serverUrl The Parse server URL
+ * @property {String} appID The Parse App ID
+ * @property {String} masterKey The Parse Master Key
+ * @property {String} jsKey The Parse JavaScript Key *optional*
+ */
+var init = function init(opts) {
+  try {
+    if (!opts.appID || !opts.masterKey || !opts.serverUrl) {
+      throw 'Missing required environment variables (PARSE_APPLICATION_ID, PARSE_MASTER_KEY, PARSE_SERVER_URL)';
+    }
+    _node2.default.initialize(opts.appID, opts.jsKey, opts.masterKey);
+    _node2.default.serverURL = opts.PARSE_SERVER_URL;
+    parseInitialized = true;
+    recreateScheduleForAllJobs();
+  } catch (error) {
+    throw error;
+  }
+};
+
 /**
  * Parse job schedule object
  * @typedef {Object} _JobSchedule
  * @property {String} id The job id
  */
-
 /**
  * Recreate the cron schedules for a specific _JobSchedule or all _JobSchedule objects
  * @param {_JobSchedule | string} [job=null] The job schedule to recreate. If not specified, all jobs schedules will be recreated.
@@ -147,13 +170,21 @@ var recreateScheduleForAllJobs = function () {
       while (1) {
         switch (_context2.prev = _context2.next) {
           case 0:
-            _context2.prev = 0;
-            _context2.next = 3;
+            if (parseInitialized) {
+              _context2.next = 2;
+              break;
+            }
+
+            throw new Error('Parse is not initialized');
+
+          case 2:
+            _context2.prev = 2;
+            _context2.next = 5;
             return new _node2.default.Query('_JobSchedule').find({
               useMasterKey: true
             });
 
-          case 3:
+          case 5:
             results = _context2.sent;
 
 
@@ -162,7 +193,7 @@ var recreateScheduleForAllJobs = function () {
             _iteratorNormalCompletion = true;
             _didIteratorError = false;
             _iteratorError = undefined;
-            _context2.prev = 8;
+            _context2.prev = 10;
             for (_iterator = results[Symbol.iterator](); !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
               job = _step.value;
 
@@ -172,57 +203,55 @@ var recreateScheduleForAllJobs = function () {
                 console.log(error);
               }
             }
-            _context2.next = 16;
+            _context2.next = 18;
             break;
 
-          case 12:
-            _context2.prev = 12;
-            _context2.t0 = _context2['catch'](8);
+          case 14:
+            _context2.prev = 14;
+            _context2.t0 = _context2['catch'](10);
             _didIteratorError = true;
             _iteratorError = _context2.t0;
 
-          case 16:
-            _context2.prev = 16;
-            _context2.prev = 17;
+          case 18:
+            _context2.prev = 18;
+            _context2.prev = 19;
 
             if (!_iteratorNormalCompletion && _iterator.return) {
               _iterator.return();
             }
 
-          case 19:
-            _context2.prev = 19;
+          case 21:
+            _context2.prev = 21;
 
             if (!_didIteratorError) {
-              _context2.next = 22;
+              _context2.next = 24;
               break;
             }
 
             throw _iteratorError;
 
-          case 22:
-            return _context2.finish(19);
-
-          case 23:
-            return _context2.finish(16);
-
           case 24:
+            return _context2.finish(21);
+
+          case 25:
+            return _context2.finish(18);
+
+          case 26:
             console.log(Object.keys(cronJobs).length + ' job(s) scheduled.');
-            _context2.next = 31;
+            _context2.next = 32;
             break;
 
-          case 27:
-            _context2.prev = 27;
-            _context2.t1 = _context2['catch'](0);
-
-            console.log('SCHEDULER ERROR: Parse is probably not initialized!');
+          case 29:
+            _context2.prev = 29;
+            _context2.t1 = _context2['catch'](2);
             throw _context2.t1;
 
-          case 31:
+          case 32:
           case 'end':
             return _context2.stop();
         }
       }
-    }, _callee2, undefined, [[0, 27], [8, 12, 16, 24], [17,, 19, 23]]);
+    }, _callee2, undefined, [[2, 29], [10, 14, 18, 26], [19,, 21, 25]]);
   }));
 
   return function recreateScheduleForAllJobs() {
